@@ -1,0 +1,231 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Fusio",
+        "version": "1"
+    },
+    "servers": [
+        {
+            "url": "http:\/\/localhost\/"
+        }
+    ],
+    "paths": {
+        "\/todo\/{todo_id}": {
+            "get": {
+                "tags": [
+                    "todo"
+                ],
+                "description": "Returns a single todo entry",
+                "operationId": "get.todo.todo_id",
+                "responses": {
+                    "200": {
+                        "description": "GET 200 response",
+                        "content": {
+                            "application\/json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/Todo"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "GET 500 response",
+                        "content": {
+                            "application\/json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/Message"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "todo"
+                ],
+                "description": "Removes a todo entry",
+                "operationId": "delete.todo.todo_id",
+                "requestBody": {
+                    "content": {
+                        "application\/json": {
+                            "schema": {
+                                "$ref": "#\/components\/schemas\/Passthru"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "DELETE 200 response",
+                        "content": {
+                            "application\/json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/Message"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "DELETE 500 response",
+                        "content": {
+                            "application\/json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/Message"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "app": [
+                            "todo"
+                        ]
+                    }
+                ]
+            },
+            "parameters": [
+                {
+                    "name": "todo_id",
+                    "in": "path",
+                    "required": true,
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            ]
+        }
+    },
+    "components": {
+        "schemas": {
+            "Todo": {
+                "type": "object",
+                "title": "todo",
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "status": {
+                        "type": "integer"
+                    },
+                    "title": {
+                        "type": "string",
+                        "minLength": 3,
+                        "maxLength": 32
+                    },
+                    "insertDate": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "required": [
+                    "title"
+                ]
+            },
+            "Message": {
+                "type": "object",
+                "title": "message",
+                "properties": {
+                    "success": {
+                        "type": "boolean"
+                    },
+                    "message": {
+                        "type": "string"
+                    }
+                }
+            },
+            "Passthru": {
+                "type": "object",
+                "title": "passthru",
+                "description": "No schema was specified.",
+                "additionalProperties": true
+            }
+        },
+        "securitySchemes": {
+            "app": {
+                "type": "oauth2",
+                "flows": {
+                    "password": {
+                        "tokenUrl": "http:\/\/localhost\/authorization\/token",
+                        "refreshUrl": "http:\/\/localhost\/authorization\/token",
+                        "scopes": {
+                            "todo": "",
+                            "authorization": "Authorization API endpoint"
+                        }
+                    },
+                    "clientCredentials": {
+                        "tokenUrl": "http:\/\/localhost\/authorization\/token",
+                        "refreshUrl": "http:\/\/localhost\/authorization\/token",
+                        "scopes": {
+                            "todo": "",
+                            "authorization": "Authorization API endpoint"
+                        }
+                    },
+                    "authorizationCode": {
+                        "authorizationUrl": "http:\/\/localhost\/developer\/auth",
+                        "tokenUrl": "http:\/\/localhost\/authorization\/token",
+                        "refreshUrl": "http:\/\/localhost\/authorization\/token",
+                        "scopes": {
+                            "todo": "",
+                            "authorization": "Authorization API endpoint"
+                        }
+                    }
+                }
+            },
+            "backend": {
+                "type": "oauth2",
+                "flows": {
+                    "clientCredentials": {
+                        "tokenUrl": "http:\/\/localhost\/backend\/token",
+                        "refreshUrl": "http:\/\/localhost\/authorization\/token",
+                        "scopes": {
+                            "backend.user": "View and manage users",
+                            "backend.transaction": "View transactions",
+                            "backend.statistic": "View statistics",
+                            "backend.sdk": "Generate client SDKs",
+                            "backend.scope": "View and manage scopes",
+                            "backend.schema": "View and manage schemas",
+                            "backend.routes": "View and manage routes",
+                            "backend.rate": "View and manage rates",
+                            "backend.plan": "View and manage plans",
+                            "backend.marketplace": "View and manage apps from the marketplace",
+                            "backend.log": "View logs",
+                            "backend.import": "Execute import",
+                            "backend.event": "View and manage events",
+                            "backend.dashboard": "View dashboard statistic",
+                            "backend.cronjob": "View and manage cronjob entries",
+                            "backend.connection": "View and manage connections",
+                            "backend.config": "View and edit config entries",
+                            "backend.audit": "View audits",
+                            "backend.app": "View and manage apps",
+                            "backend.action": "View and manage actions",
+                            "backend.account": "Option to change the password of your account",
+                            "backend": "Global access to the backend API"
+                        }
+                    }
+                }
+            },
+            "consumer": {
+                "type": "oauth2",
+                "flows": {
+                    "clientCredentials": {
+                        "tokenUrl": "http:\/\/localhost\/consumer\/token",
+                        "refreshUrl": "http:\/\/localhost\/authorization\/token",
+                        "scopes": {
+                            "consumer.user": "Edit your account settings",
+                            "consumer.transaction": "Execute transactions",
+                            "consumer.subscription": "View and manage your subscriptions",
+                            "consumer.scope": "View available scopes",
+                            "consumer.plan": "View available plans",
+                            "consumer.grant": "View and manage your grants",
+                            "consumer.event": "View and manage your events",
+                            "consumer.app": "View and manage your apps",
+                            "consumer": "Global access to the consumer API"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
